@@ -172,3 +172,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+/Simple.CredentialsManager.sln.GhostDoc.xml
