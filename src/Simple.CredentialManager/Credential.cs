@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
@@ -326,7 +329,7 @@ namespace Simple.CredentialManager
         }
 
         /// <summary>
-        ///     Checks the not disposed.
+        ///     Ensures this instance is not disposed.
         /// </summary>
         /// <exception cref="System.ObjectDisposedException">Credential object is already disposed.</exception>
         private void CheckNotDisposed()
@@ -414,7 +417,7 @@ namespace Simple.CredentialManager
         }
 
         /// <summary>
-        ///     Existses this instance.
+        ///     Checks if the credential with these properties exists
         /// </summary>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         /// <exception cref="System.InvalidOperationException">Target must be specified to check existance of a credential.</exception>
@@ -430,6 +433,18 @@ namespace Simple.CredentialManager
             {
                 return existing.Load();
             }
+        }
+        
+        /// <summary>
+        ///     Loads all credentials
+        /// </summary>
+        public static IEnumerable<Credential> LoadAll()
+        {
+            UnmanagedCodePermission.Demand();
+
+            return NativeMethods.CredEnumerate()
+                .Select(c => new Credential(c.UserName, null, c.TargetName))
+                .Where(c=>c.Load());
         }
 
         /// <summary>
@@ -450,6 +465,11 @@ namespace Simple.CredentialManager
             PersistenceType = (PersistenceType) credential.Persist;
             Description = credential.Comment;
             LastWriteTimeUtc = DateTime.FromFileTimeUtc(credential.LastWritten);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Username: {0}, Target: {1}, LastWriteTime: {2}, LastWriteTimeUtc: {3}, Type: {4}, PersistenceType: {5}", Username, Target, LastWriteTime, LastWriteTimeUtc, Type, PersistenceType);
         }
     }
 }

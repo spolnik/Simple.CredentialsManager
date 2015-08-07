@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
@@ -87,6 +89,46 @@ namespace Simple.CredentialManager
         internal static extern bool CredDelete(StringBuilder target, CredentialType type, int flags);
 
         /// <summary>
+        /// Enumerate credentials in the credential store
+        /// signature: BOOL CredEnumerate (
+        ///  _In_ LPCTSTR     Filter,
+        ///  _In_ DWORD       Flags,
+        ///  _Out_ DWORD       *Count,
+        ///  _Out_ PCREDENTIAL **Credentials
+        ///);
+        /// <param name="filter">[in] 
+        /// Pointer to a null-terminated string that contains the filter for the returned credentials.Only credentials with a TargetName matching the filter will be returned.The filter specifies a name prefix followed by an asterisk.For instance, the filter "FRED*" will return all credentials with a TargetName beginning with the string "FRED".
+        /// If NULL is specified, all credentials will be returned.</param>
+        /// <param name="flag">[in]        
+        /// The value of this parameter can be zero or more of the following values combined with a bitwise-OR operation.
+        ///  Value Meaning
+        ///  CRED_ENUMERATE_ALL_CREDENTIALS 0x1
+        ///  This function enumerates all of the credentials in the user's credential set. The target name of each credential is returned in the "namespace:attribute=target" format. If this flag is set and the Filter parameter is not NULL, the function fails and returns ERROR_INVALID_FLAGS.
+        ///  Windows Server 2003 and Windows XP:  This flag is not supported.
+        ///</param>
+        /// <param name="count">[out] Count of the credentials returned in the Credentials array.</param>
+        /// <param name="pCredentials"> [out]      
+        ///  Pointer to an array of pointers to credentials.The returned credential is a single allocated block. Any pointers contained within the buffer are pointers to locations within this single allocated block.The single returned buffer must be freed by calling CredFree.
+        ///  Return value
+        /// </param>
+        /// <returns>
+        /// The function returns TRUE on success and FALSE on failure. The GetLastError function can be called to get a more specific status code.The following status codes can be returned.
+        ///  Return code/value Description
+        ///  ERROR_NOT_FOUND
+        ///  1168 (0x490)
+        ///  No credential exists matching the specified Filter.
+        ///  ERROR_NO_SUCH_LOGON_SESSION
+        ///  1312 (0x520)
+        ///  The logon session does not exist or there is no credential set associated with this logon session. Network logon sessions do not have an associated credential set.
+        ///  ERROR_INVALID_FLAGS
+        ///  1004 (0x3EC)
+        ///  A flag that is not valid was specified for the Flags parameter, or CRED_ENUMERATE_ALL_CREDENTIALS is specified for the Flags parameter and the Filter parameter is not NULL.
+        /// </returns>
+        /// </summary>
+        [DllImport("Advapi32.dll", EntryPoint = "CredEnumerate", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern bool CredEnumerate(string filter, int flag, out int count, out IntPtr pCredentials);
+
+        /// <summary>
         /// The CREDENTIAL structure contains an individual credential.
         /// 
         /// See CREDENTIAL structure <see href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa374788(v=vs.85).aspx">documentation.</see>
@@ -106,6 +148,23 @@ namespace Simple.CredentialManager
             public IntPtr Attributes;
             [MarshalAs(UnmanagedType.LPWStr)] public string TargetAlias;
             [MarshalAs(UnmanagedType.LPWStr)] public string UserName;
+        }
+
+        internal static IEnumerable<CREDENTIAL> CredEnumerate()
+        {
+            int count;
+            IntPtr pCredentials;
+            var ret = CredEnumerate(null, 0, out count, out pCredentials);
+
+            if (ret == false)
+                throw new Exception("Failed to enumerate credentials");
+
+            var credentials = new IntPtr[count];
+            for (var n = 0; n < count; n++)
+                credentials[n] = Marshal.ReadIntPtr(pCredentials,
+                    n * Marshal.SizeOf(typeof(IntPtr)));
+
+            return credentials.Select(ptr => (CREDENTIAL)Marshal.PtrToStructure(ptr, typeof(CREDENTIAL)));
         }
 
         internal sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
