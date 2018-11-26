@@ -350,16 +350,12 @@ namespace Simple.CredentialManager
             CheckNotDisposed();
             UnmanagedCodePermission.Demand();
 
-            var passwordBytes = Encoding.Unicode.GetBytes(Password);
-            if (Password.Length > (512))
-                throw new ArgumentOutOfRangeException("password", "The password has exceeded 512 bytes.");
-
             var credential = new NativeMethods.CREDENTIAL
             {
                 TargetName = Target,
                 UserName = Username,
-                CredentialBlob = Marshal.StringToCoTaskMemUni(Password),
-                CredentialBlobSize = passwordBytes.Length,
+                CredentialBlob = Marshal.SecureStringToGlobalAllocUnicode(SecurePassword),
+                CredentialBlobSize = SecurePassword.Length * sizeof(char),
                 Comment = Description,
                 Type = (int) Type,
                 Persist = (int) PersistenceType
@@ -457,7 +453,10 @@ namespace Simple.CredentialManager
 
             if (credential.CredentialBlobSize > 0)
             {
-                Password = Marshal.PtrToStringUni(credential.CredentialBlob, credential.CredentialBlobSize/2);
+                unsafe
+                {
+                    SecurePassword = new SecureString((char*)credential.CredentialBlob.ToPointer(), credential.CredentialBlobSize / sizeof(char));
+                }
             }
 
             Target = credential.TargetName;
