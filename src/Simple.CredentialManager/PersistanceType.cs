@@ -20,7 +20,7 @@
         ///     It is visible to other logon sessions of this same user on this same computer
         ///     and not visible to logon sessions for this user on other computers.
         /// </summary>
-        LocalComputer = 2,
+        LocalComputer = 3,
 
         /// <summary>
         ///     The enterprise persistence type
@@ -30,6 +30,6 @@
         ///     account to not have roam-able state. For instance, if the user has no roaming profile, the credential will only
         ///     persist locally.
         /// </summary>
-        Enterprise = 3
+        Enterprise = 2
     }
 }
