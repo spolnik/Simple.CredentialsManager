@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
 
 namespace Simple.CredentialManager
 {
@@ -180,7 +180,7 @@ namespace Simple.CredentialManager
                 if (!IsInvalid)
                 {
                     // Get the Credential from the mem location
-                    return (CREDENTIAL) Marshal.PtrToStructure(handle, typeof (CREDENTIAL));
+                    return (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL));
                 }
 
                 throw new InvalidOperationException("Invalid CriticalHandle!");

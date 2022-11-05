@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -84,7 +83,7 @@ namespace Simple.CredentialManager
         /// </summary>
         public Credential()
             : this(null)
-        {}
+        { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Credential" /> class.
@@ -92,7 +91,7 @@ namespace Simple.CredentialManager
         /// <param name="username">The username.</param>
         public Credential(string username)
             : this(username, null)
-        {}
+        { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Credential" /> class.
@@ -101,7 +100,7 @@ namespace Simple.CredentialManager
         /// <param name="password">The password.</param>
         public Credential(string username, string password)
             : this(username, password, null)
-        {}
+        { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Credential" /> class.
@@ -111,7 +110,7 @@ namespace Simple.CredentialManager
         /// <param name="target">The string that contains the name of the credential.</param>
         public Credential(string username, string password, string target)
             : this(username, password, target, CredentialType.Generic)
-        {}
+        { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Credential" /> class.
@@ -360,8 +359,8 @@ namespace Simple.CredentialManager
                 CredentialBlob = Marshal.SecureStringToGlobalAllocUnicode(SecurePassword),
                 CredentialBlobSize = SecurePassword.Length * sizeof(char),
                 Comment = Description,
-                Type = (int) Type,
-                Persist = (int) PersistenceType
+                Type = (int)Type,
+                Persist = (int)PersistenceType
             };
 
             var result = NativeMethods.CredWrite(ref credential, 0);
@@ -428,12 +427,12 @@ namespace Simple.CredentialManager
             if (string.IsNullOrEmpty(Target))
                 throw new InvalidOperationException("Target must be specified to check existance of a credential.");
 
-            using (var existing = new Credential {Target = Target, Type = Type})
+            using (var existing = new Credential { Target = Target, Type = Type })
             {
                 return existing.Load();
             }
         }
-        
+
         /// <summary>
         ///     Loads all credentials
         /// </summary>
@@ -443,7 +442,7 @@ namespace Simple.CredentialManager
 
             return NativeMethods.CredEnumerate()
                 .Select(c => new Credential(c.UserName, null, c.TargetName))
-                .Where(c=>c.Load());
+                .Where(c => c.Load());
         }
 
         /// <summary>
@@ -463,8 +462,8 @@ namespace Simple.CredentialManager
             }
 
             Target = credential.TargetName;
-            Type = (CredentialType) credential.Type;
-            PersistenceType = (PersistenceType) credential.Persist;
+            Type = (CredentialType)credential.Type;
+            PersistenceType = (PersistenceType)credential.Persist;
             Description = credential.Comment;
             LastWriteTimeUtc = DateTime.FromFileTimeUtc(credential.LastWritten);
         }
