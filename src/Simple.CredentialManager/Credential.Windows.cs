@@ -17,7 +17,9 @@ namespace Simple.CredentialManager
     ///     See Credential Manager
     ///     <see href="http://windows.microsoft.com/en-us/windows7/what-is-credential-manager">documentation.</see>
     /// </summary>
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("windows")]
+#endif
     public class WinCredential : ICredential
     {
         /// <summary>

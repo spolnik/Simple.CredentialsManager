@@ -8,7 +8,9 @@ using Tmds.DBus;
 [assembly: InternalsVisibleTo(Tmds.DBus.Connection.DynamicAssemblyName)]
 namespace secrets.DBus
 {
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     [DBusInterface("org.gnome.keyring.InternalUnsupportedGuiltRiddenInterface")]
     interface IInternalUnsupportedGuiltRiddenInterface : IDBusObject
     {
@@ -18,7 +20,9 @@ namespace secrets.DBus
         Task UnlockWithMasterPasswordAsync(ObjectPath Collection, (ObjectPath, byte[], byte[], string) Master);
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     [DBusInterface("org.freedesktop.Secret.Service")]
     interface IService : IDBusObject
     {
@@ -41,7 +45,9 @@ namespace secrets.DBus
         Task<IDisposable> WatchPropertiesAsync(Action<PropertyChanges> handler);
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     [Dictionary]
     class ServiceProperties
     {
@@ -60,13 +66,17 @@ namespace secrets.DBus
         }
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     static class ServiceExtensions
     {
         public static Task<ObjectPath[]> GetCollectionsAsync(this IService o) => o.GetAsync<ObjectPath[]>("Collections");
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     [DBusInterface("org.freedesktop.Secret.Collection")]
     interface ICollection : IDBusObject
     {
@@ -82,7 +92,9 @@ namespace secrets.DBus
         Task<IDisposable> WatchPropertiesAsync(Action<PropertyChanges> handler);
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     [Dictionary]
     class CollectionProperties
     {
@@ -157,7 +169,9 @@ namespace secrets.DBus
         }
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     static class CollectionExtensions
     {
         public static Task<ObjectPath[]> GetItemsAsync(this ICollection o) => o.GetAsync<ObjectPath[]>("Items");
@@ -169,7 +183,9 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.Secret.Item")]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     interface IItem : IDBusObject
     {
         Task<ObjectPath> DeleteAsync();
@@ -182,7 +198,9 @@ namespace secrets.DBus
     }
 
     [Dictionary]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     class ItemProperties
     {
         private bool _Locked = default(bool);
@@ -270,7 +288,9 @@ namespace secrets.DBus
         }
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     static class ItemExtensions
     {
         public static Task<bool> GetLockedAsync(this IItem o) => o.GetAsync<bool>("Locked");
@@ -285,14 +305,18 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.Secret.Session")]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     interface ISession : IDBusObject
     {
         Task CloseAsync();
     }
 
     [DBusInterface("org.freedesktop.Secret.Prompt")]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     interface IPrompt : IDBusObject
     {
         Task PromptAsync(string WindowId);
@@ -301,7 +325,9 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.impl.portal.Secret")]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     interface ISecret : IDBusObject
     {
         Task<(uint response, IDictionary<string, object> results)> RetrieveSecretAsync(ObjectPath Handle, string AppId, CloseSafeHandle Fd, IDictionary<string, object> Options);
@@ -312,7 +338,9 @@ namespace secrets.DBus
     }
 
     [Dictionary]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     class SecretProperties
     {
         private uint _version = default(uint);
@@ -330,14 +358,18 @@ namespace secrets.DBus
         }
     }
 
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     static class SecretExtensions
     {
         public static Task<uint> GetVersionAsync(this ISecret o) => o.GetAsync<uint>("version");
     }
 
     [DBusInterface("org.gnome.keyring.Daemon")]
+#if NET5_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
+#endif
     interface IDaemon : IDBusObject
     {
         Task<IDictionary<string, string>> GetEnvironmentAsync();
