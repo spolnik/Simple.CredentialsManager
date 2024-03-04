@@ -22,12 +22,12 @@ namespace Simple.CredentialManager
 #endif
     public class WinCredential : ICredential
     {
+#if !NET8_0_OR_GREATER
         /// <summary>
         ///     The lock object
         /// </summary>
         private static readonly object LockObject = new object();
 
-#if !NET8_0_OR_GREATER
         /// <summary>
         ///     The unmanaged code permission
         /// </summary>
