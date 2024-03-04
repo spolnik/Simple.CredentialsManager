@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
@@ -12,6 +13,9 @@ namespace Simple.CredentialManager
     ///     Adapter to WinCredential for compatibility reasons.
     ///     Before Linux was supported, there was only this credential class. Now there is LinuxCredential and WinCredential.
     /// </summary>
+#if NET5_0_OR_GREATER
+    [SupportedOSPlatform("windows")]
+#endif
     public class Credential : WinCredential
     {
         /// <summary>
