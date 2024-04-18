@@ -8,7 +8,7 @@ using Tmds.DBus;
 [assembly: InternalsVisibleTo(Tmds.DBus.Connection.DynamicAssemblyName)]
 namespace secrets.DBus
 {
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     [DBusInterface("org.gnome.keyring.InternalUnsupportedGuiltRiddenInterface")]
@@ -20,7 +20,7 @@ namespace secrets.DBus
         Task UnlockWithMasterPasswordAsync(ObjectPath Collection, (ObjectPath, byte[], byte[], string) Master);
     }
 
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     [DBusInterface("org.freedesktop.Secret.Service")]
@@ -74,7 +74,7 @@ namespace secrets.DBus
         public static Task<ObjectPath[]> GetCollectionsAsync(this IService o) => o.GetAsync<ObjectPath[]>("Collections");
     }
 
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     [DBusInterface("org.freedesktop.Secret.Collection")]
@@ -183,7 +183,7 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.Secret.Item")]
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     interface IItem : IDBusObject
@@ -305,7 +305,7 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.Secret.Session")]
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     interface ISession : IDBusObject
@@ -314,7 +314,7 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.Secret.Prompt")]
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     interface IPrompt : IDBusObject
@@ -325,7 +325,7 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.freedesktop.impl.portal.Secret")]
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     interface ISecret : IDBusObject
@@ -367,7 +367,7 @@ namespace secrets.DBus
     }
 
     [DBusInterface("org.gnome.keyring.Daemon")]
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
     [SupportedOSPlatform("Linux")]
 #endif
     interface IDaemon : IDBusObject
