@@ -5,8 +5,11 @@ C# Api for accessing Windows Credential Manager (reading, writing and removing o
 Linux is also supported (see Linux Support below).
 Tested up to .NET Core 8.0
 
+
 # Linux Support
-```sudo apt install dbus-x11 gnome-keyring```
+The tests were run against Ubuntu 24.04 (Desktop).
+
+```sudo apt install dbus-x11 gnome-keyring libsecret-tools```
 
 The Secret Service DBus-API is being used to retreive data from the Linux Credential Manager.
 
